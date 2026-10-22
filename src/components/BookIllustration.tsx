@@ -4,7 +4,7 @@ const BookIllustration = () => {
       viewBox="-30 -20 720 450"
       fill="none"
       fontFamily="inherit"
-      className="mx-auto block w-full max-w-115 sm:max-w-130 lg:max-w-160"
+      className="mx-auto block w-full max-w-80 sm:max-w-130 lg:max-w-160"
       aria-hidden="true"
       focusable="false"
     >

@@ -19,7 +19,7 @@ const AuthLayout = ({ children }: LayoutProps<'/'>) => {
           </span>
         </Link>
 
-        <div className="mx-auto w-full max-w-180 px-4 pb-8 lg:flex lg:flex-1 lg:items-center lg:px-0 lg:py-10">
+        <div className="mx-auto w-full max-w-180 px-4 pb-12 lg:flex lg:flex-1 lg:items-center lg:px-0 lg:py-10">
           <BookIllustration />
         </div>
 
