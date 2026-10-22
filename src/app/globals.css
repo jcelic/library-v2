@@ -96,4 +96,9 @@
   [role='button']:not(:disabled) {
     cursor: pointer;
   }
+
+  /* Keyboard focus ring for every element (instead of the browser's default black) */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+  }
 }
