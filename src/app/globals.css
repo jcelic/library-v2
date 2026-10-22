@@ -1,26 +1,99 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-nunito), sans-serif;
+
+  /* ── Backgrounds ──────────────────────────────────────────── */
+  --color-bg: #f4f3ef; /* whole page (already on body) */
+  --color-surface: #ffffff; /* cards, sidebar, modals, inputs */
+  --color-surface-2: #efede7; /* hover on buttons/links, tags, segmented control */
+  --color-surface-3: #e5e2da; /* skeleton loading, empty part of progress bars */
+
+  /* ── Text ─────────────────────────────────────────────────── */
+  --color-ink: #17161b; /* main text, headings */
+  --color-ink-2: #45434d; /* secondary text: labels, icons, nav links */
+  --color-muted: #6b6874; /* least important: author, dates, hints, placeholders */
+
+  /* ── Borders ──────────────────────────────────────────────── */
+  --color-line: #e4e1d9; /* cards, dividers */
+  --color-line-2: #d5d1c8; /* inputs and secondary buttons */
+
+  /* ── Accent ───────────────────────────────────────────────── */
+  --color-accent: #ff853f; /* primary button ("Add book", "Sign in") */
+  --color-accent-hover: #ff7426; /* hover:bg-accent-hover */
+  --color-on-accent: #1c0c03; /* text ON bg-accent */
+  --color-accent-soft: #fbe7dc; /* active nav item, small badges */
+  --color-accent-text: #ff853f; /* links, text on bg-accent-soft (≥4.5:1 contrast) */
+
+  /* ── Login panel ──────────────────────────────────────────── */
+  --color-hero: #eee5d6; /* big panel on the login page */
+  --color-on-hero: #29231d; /* text on that panel */
+
+  /* ── Favorites ────────────────────────────────────────────── */
+  --color-fav: #e11d48; /* heart icon */
+  --color-fav-soft: #fde3e9; /* background behind heart / favorites header */
+
+  /* ── Status ──────────────────────────────────────────────── */
+  --color-ok: #157a3b; /* "Finished":     bg-ok-soft text-ok */
+  --color-ok-soft: #dcf2e3;
+  --color-warn: #9a4f06; /* "Not finished": bg-warn-soft text-warn */
+  --color-warn-soft: #faebd2;
+  --color-danger: #c81e1e; /* form errors: text-danger; strong delete: bg-danger text-on-danger */
+  --color-danger-soft: #fce5e5; /* subtle delete button: bg-danger-soft text-danger */
+  --color-on-danger: #ffffff;
+
+  /* ── Modals ───────────────────────────────────────────────── */
+  --color-overlay: rgba(23, 22, 27, 0.4); /* dimmed background behind modals */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .dark {
+    color-scheme: dark;
+
+    --color-bg: #0e0e11;
+    --color-surface: #17171b;
+    --color-surface-2: #1f1f25;
+    --color-surface-3: #2a2a31;
+
+    --color-ink: #f2f1ed;
+    --color-ink-2: #c9c7cf;
+    --color-muted: #9b98a4;
+
+    --color-line: #26262d;
+    --color-line-2: #35353d;
+
+    --color-accent: #ff7a3d;
+    --color-accent-hover: #ff915f;
+    --color-on-accent: #1c0c03;
+    --color-accent-soft: rgba(255, 122, 61, 0.14);
+    --color-accent-text: #ff9c70;
+
+    --color-hero: #2e1609;
+    --color-on-hero: #ffebdf;
+
+    --color-fav: #fb7185;
+    --color-fav-soft: rgba(251, 113, 133, 0.14);
+
+    --color-ok: #4ade80;
+    --color-ok-soft: rgba(74, 222, 128, 0.12);
+    --color-warn: #fbbf24;
+    --color-warn-soft: rgba(251, 191, 36, 0.12);
+    --color-danger: #f87171;
+    --color-danger-soft: rgba(248, 113, 113, 0.12);
+    --color-on-danger: #2a0505;
+
+    --color-overlay: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Cursor pointer */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
 }
