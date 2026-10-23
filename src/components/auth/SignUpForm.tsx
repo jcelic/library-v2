@@ -1,14 +1,57 @@
 'use client';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { FieldError } from '@/components/ui/FieldError';
+import { type SignUpInput, signUpSchema } from '@/lib/validations/auth';
+import { signUp } from '@/app/(auth)/signup/actions';
+import { Spinner } from '@/components/ui/Spinner';
+import { getPasswordScore } from '@/lib/password-strength';
+
+const STRENGTH_LEVELS = [
+  { label: 'Weak', bar: 'bg-danger', text: 'text-danger' },
+  { label: 'Weak', bar: 'bg-danger', text: 'text-danger' },
+  { label: 'Fair', bar: 'bg-warn', text: 'text-warn' },
+  { label: 'Good', bar: 'bg-ok', text: 'text-ok' },
+  { label: 'Strong', bar: 'bg-ok', text: 'text-ok' },
+];
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const score = 3;
+  const {
+    register,
+    handleSubmit,
+    setError,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpInput>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+  });
+
+  const [password, name, email] = useWatch({
+    control,
+    name: ['password', 'name', 'email'],
+  });
+
+  const score = password ? getPasswordScore(password, [name, email]) : null;
+
+  const level = score !== null ? STRENGTH_LEVELS[score] : null;
+  const filledBars = score !== null ? Math.max(score, 1) : 0;
+
+  const onSubmit = async (values: SignUpInput) => {
+    const result = await signUp(values);
+
+    if (result?.errors.email) {
+      setError('email', { message: result.errors.email[0] });
+    }
+  };
+
   return (
-    <form className="space-y-5">
+    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-2">
         <label htmlFor="name" className="block font-bold text-ink-2">
           Full name
@@ -21,13 +64,17 @@ const SignUpForm = () => {
 
           <input
             id="name"
-            name="name"
             type="text"
+            {...register('name')}
             autoComplete="name"
             placeholder="John Doe"
-            className="h-12 w-full rounded-xl border border-line-2 bg-surface pr-4 pl-12 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            aria-invalid={errors.name ? true : undefined}
+            aria-describedby="name-error"
+            className={`h-12 w-full rounded-xl border bg-surface pr-4 pl-12 text-base text-ink placeholder:text-muted focus:outline-none ${errors.name ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
           />
         </div>
+
+        <FieldError message={errors.name?.message} id="name-error" />
       </div>
 
       <div className="space-y-2">
@@ -42,13 +89,17 @@ const SignUpForm = () => {
 
           <input
             id="email"
-            name="email"
             type="email"
+            {...register('email')}
             autoComplete="email"
             placeholder="john@example.com"
-            className="h-12 w-full rounded-xl border border-line-2 bg-surface pr-4 pl-12 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            aria-invalid={errors.email ? true : undefined}
+            aria-describedby="email-error"
+            className={`h-12 w-full rounded-xl border bg-surface pr-4 pl-12 text-base text-ink placeholder:text-muted focus:outline-none ${errors.email ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
           />
         </div>
+
+        <FieldError message={errors.email?.message} id="email-error" />
       </div>
 
       <div className="space-y-2">
@@ -63,11 +114,13 @@ const SignUpForm = () => {
 
           <input
             id="password"
-            name="password"
             type={showPassword ? 'text' : 'password'}
+            {...register('password')}
             autoComplete="new-password"
             placeholder="Create a password"
-            className="h-12 w-full rounded-xl border border-line-2 bg-surface px-12 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            aria-invalid={errors.password ? true : undefined}
+            aria-describedby="password-error"
+            className={`h-12 w-full rounded-xl border bg-surface px-12 text-base text-ink placeholder:text-muted focus:outline-none ${errors.password ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
           />
 
           <button
@@ -84,18 +137,22 @@ const SignUpForm = () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5 pt-1">
-          {Array.from({ length: 4 }).map((_, index) => {
-            return (
+        <FieldError message={errors.password?.message} id="password-error" />
+
+        {level && (
+          <div className="flex items-center gap-1.5 pt-1">
+            {Array.from({ length: 4 }).map((_, index) => (
               <span
                 key={index}
-                className={`h-1.5 flex-1 rounded-full ${score > index ? 'bg-ok' : 'bg-surface-3'}`}
+                className={`h-1.5 flex-1 rounded-full ${index < filledBars ? level.bar : 'bg-surface-3'}`}
               />
-            );
-          })}
+            ))}
 
-          <span className="ml-2 text-xs font-extrabold text-ok">Strong</span>
-        </div>
+            <span className={`ml-2 text-xs font-extrabold ${level.text}`}>
+              {level.label}
+            </span>
+          </div>
+        )}
 
         <p className="text-xs text-muted">
           At least 8 characters. Avoid common words and patterns.
@@ -117,11 +174,13 @@ const SignUpForm = () => {
 
           <input
             id="confirm-password"
-            name="confirmPassword"
             type={showConfirmPassword ? 'text' : 'password'}
+            {...register('confirmPassword')}
             autoComplete="new-password"
             placeholder="Repeat your password"
-            className="h-12 w-full rounded-xl border border-line-2 bg-surface px-12 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            aria-invalid={errors.confirmPassword ? true : undefined}
+            aria-describedby="confirm-password-error"
+            className={`h-12 w-full rounded-xl border bg-surface px-12 text-base text-ink placeholder:text-muted focus:outline-none ${errors.confirmPassword ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
           />
 
           <button
@@ -137,13 +196,20 @@ const SignUpForm = () => {
             )}
           </button>
         </div>
+
+        <FieldError
+          message={errors.confirmPassword?.message}
+          id="confirm-password-error"
+        />
       </div>
 
       <button
-        type="button"
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-base font-extrabold text-on-accent transition-colors hover:bg-accent-hover"
+        type="submit"
+        disabled={isSubmitting}
+        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-base font-extrabold text-on-accent transition-colors enabled:hover:bg-accent-hover disabled:opacity-70"
       >
-        Create account
+        {isSubmitting ? 'Creating account…' : 'Create account'}
+        {isSubmitting && <Spinner />}
       </button>
     </form>
   );

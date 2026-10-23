@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MIN_PASSWORD_SCORE, getPasswordScore } from '@/lib/password-strength';
 
 export const signUpSchema = z
   .object({
@@ -26,6 +27,15 @@ export const signUpSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
-  });
+  })
+  .refine(
+    (data) =>
+      getPasswordScore(data.password, [data.name, data.email]) >=
+      MIN_PASSWORD_SCORE,
+    {
+      message: 'This password is too easy to guess',
+      path: ['password'],
+    },
+  );
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
