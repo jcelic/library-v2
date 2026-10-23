@@ -1,4 +1,4 @@
-import BookIllustration from '@/components/BookIllustration';
+import BookIllustration from '@/components/auth/BookIllustration';
 import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
