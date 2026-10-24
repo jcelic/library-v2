@@ -1,6 +1,6 @@
-import BookIllustration from '@/components/auth/BookIllustration';
-import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
+import BookIllustration from '@/components/auth/BookIllustration';
+import { LogoMark } from '@/components/ui/LogoMark';
 
 const AuthLayout = ({ children }: LayoutProps<'/'>) => {
   return (
@@ -11,7 +11,7 @@ const AuthLayout = ({ children }: LayoutProps<'/'>) => {
           className="m-6 flex w-fit items-center gap-3 lg:mx-12 lg:mt-10"
         >
           <span className="flex size-12 items-center justify-center rounded-2xl bg-on-hero text-hero">
-            <BookOpen className="size-6" aria-hidden="true" />
+            <LogoMark className="size-8" />
           </span>
 
           <span className="text-2xl font-extrabold tracking-tight">
