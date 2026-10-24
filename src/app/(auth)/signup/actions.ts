@@ -6,6 +6,8 @@ import { Prisma } from '@/generated/prisma/client';
 import { hashPassword } from '@/lib/auth/password';
 import { createSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
+import { getRateLimitMessage, signupIpLimiter } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/request';
 import { signUpSchema } from '@/lib/validations/signup';
 
 export type SignUpResult = {
@@ -14,6 +16,7 @@ export type SignUpResult = {
     email?: string[];
     password?: string[];
     confirmPassword?: string[];
+    root?: string[];
   };
 };
 
@@ -22,6 +25,13 @@ export const signUp = async (values: unknown): Promise<SignUpResult> => {
 
   if (!result.success) {
     return { errors: z.flattenError(result.error).fieldErrors };
+  }
+
+  const ip = await getClientIp();
+  const ipLimit = await signupIpLimiter.limit(ip);
+
+  if (!ipLimit.success) {
+    return { errors: { root: [getRateLimitMessage(ipLimit.reset)] } };
   }
 
   const { name, email, password } = result.data;

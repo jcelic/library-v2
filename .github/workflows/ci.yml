@@ -12,6 +12,8 @@ jobs:
     env:
       DATABASE_URL: postgresql://user:password@localhost:5432/library
       DIRECT_URL: postgresql://user:password@localhost:5432/library
+      UPSTASH_REDIS_REST_URL: https://example.upstash.io
+      UPSTASH_REDIS_REST_TOKEN: ci-placeholder
 
     steps:
       - name: Check out code

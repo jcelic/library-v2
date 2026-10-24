@@ -45,6 +45,10 @@ const SignUpForm = () => {
   const onSubmit = async (values: SignUpInput) => {
     const result = await signUp(values);
 
+    if (result?.errors.root) {
+      setError('root', { message: result.errors.root[0] });
+    }
+
     if (result?.errors.email) {
       setError('email', { message: result.errors.email[0] });
     }
@@ -202,6 +206,15 @@ const SignUpForm = () => {
           id="confirm-password-error"
         />
       </div>
+
+      {errors.root?.message && (
+        <p
+          role="alert"
+          className="rounded-xl bg-danger-soft px-4 py-3 text-sm font-semibold text-danger"
+        >
+          {errors.root.message}
+        </p>
+      )}
 
       <button
         type="submit"

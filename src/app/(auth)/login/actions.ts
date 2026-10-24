@@ -4,6 +4,12 @@ import { redirect } from 'next/navigation';
 import { verifyPassword } from '@/lib/auth/password';
 import { createSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
+import {
+  getRateLimitMessage,
+  loginEmailLimiter,
+  loginIpLimiter,
+} from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/request';
 import { loginSchema } from '@/lib/validations/login';
 
 type LoginResult = {
@@ -20,6 +26,19 @@ export const login = async (values: unknown): Promise<LoginResult> => {
   }
 
   const { email, password } = result.data;
+
+  const ip = await getClientIp();
+  const ipLimit = await loginIpLimiter.limit(ip);
+
+  if (!ipLimit.success) {
+    return { error: getRateLimitMessage(ipLimit.reset) };
+  }
+
+  const emailLimit = await loginEmailLimiter.limit(email);
+
+  if (!emailLimit.success) {
+    return { error: getRateLimitMessage(emailLimit.reset) };
+  }
 
   const user = await db.user.findUnique({
     where: { email },
