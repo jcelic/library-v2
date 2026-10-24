@@ -1,7 +1,7 @@
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { LogoMark } from '@/components/ui/LogoMark';
-import { getCurrentUser } from '@/lib/auth/session';
+import { requireUser } from '@/lib/auth/session';
 import { logout } from '@/lib/auth/actions';
 import NavLinks from '@/components/layout/NavLinks';
 
@@ -14,7 +14,7 @@ const getInitials = (name: string): string => {
 };
 
 const Sidebar = async () => {
-  const user = await getCurrentUser();
+  const user = await requireUser();
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-62 shrink-0 flex-col gap-8 border-r border-line bg-surface px-4 pt-6 pb-4 lg:flex">
@@ -27,28 +27,26 @@ const Sidebar = async () => {
 
       <NavLinks />
 
-      {user && (
-        <div className="mt-auto flex items-center gap-2.5 rounded-2xl bg-surface-2 p-2.5">
-          <span className="flex size-9.5 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-extrabold text-on-accent">
-            {getInitials(user.name)}
-          </span>
+      <div className="mt-auto flex items-center gap-2.5 rounded-2xl bg-surface-2 p-2.5">
+        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-extrabold text-on-accent">
+          {getInitials(user.name)}
+        </span>
 
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-bold text-ink">{user.name}</p>
-            <p className="truncate text-xs text-muted">{user.email}</p>
-          </div>
-
-          <form action={logout}>
-            <button
-              type="submit"
-              aria-label="Sign out"
-              className="flex size-10 shrink-0 items-center justify-center rounded-xl text-ink-2 transition-colors hover:bg-surface hover:text-ink"
-            >
-              <LogOut className="size-5" aria-hidden="true" />
-            </button>
-          </form>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-bold text-ink">{user.name}</p>
+          <p className="truncate text-xs text-muted">{user.email}</p>
         </div>
-      )}
+
+        <form action={logout}>
+          <button
+            type="submit"
+            aria-label="Sign out"
+            className="flex size-10 shrink-0 items-center justify-center rounded-xl text-ink-2 transition-colors hover:bg-surface hover:text-ink"
+          >
+            <LogOut className="size-5" aria-hidden="true" />
+          </button>
+        </form>
+      </div>
     </aside>
   );
 };

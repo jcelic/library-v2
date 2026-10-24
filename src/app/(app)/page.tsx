@@ -1,8 +1,12 @@
-const HomePage = () => {
+import { requireUser } from '@/lib/auth/session';
+
+const HomePage = async () => {
+  await requireUser();
+
   return (
-    <main className="mx-auto max-w-5xl px-6 py-16">
+    <div>
       <h1 className="text-4xl font-extrabold tracking-tight">Library</h1>
-    </main>
+    </div>
   );
 };
 

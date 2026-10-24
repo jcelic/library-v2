@@ -1,9 +1,11 @@
 import 'server-only';
 import { createHash, randomBytes } from 'node:crypto';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { env } from '@/lib/env';
 import { cache } from 'react';
+import { SESSION_COOKIE_NAME } from '@/lib/auth/constants';
 
 type CurrentUser = {
   id: string;
@@ -11,7 +13,6 @@ type CurrentUser = {
   email: string;
 };
 
-const SESSION_COOKIE_NAME = 'session';
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
 
 export const generateSessionToken = (): string => {
@@ -87,4 +88,14 @@ export const deleteSession = async () => {
     await db.session.deleteMany({ where: { tokenHash } });
     cookieStore.delete(SESSION_COOKIE_NAME);
   }
+};
+
+export const requireUser = async (): Promise<CurrentUser> => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  return user;
 };

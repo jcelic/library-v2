@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import BookIllustration from '@/components/auth/BookIllustration';
 import { LogoMark } from '@/components/ui/LogoMark';
+import { getCurrentUser } from '@/lib/auth/session';
+import { redirect } from 'next/navigation';
 
-const AuthLayout = ({ children }: LayoutProps<'/'>) => {
+const AuthLayout = async ({ children }: LayoutProps<'/'>) => {
+  const user = await getCurrentUser();
+
+  if (user) {
+    redirect('/');
+  }
+
   return (
     <div className="grid min-h-dvh grid-rows-[auto_1fr] bg-hero lg:grid-cols-[0.95fr_1.05fr] lg:grid-rows-1">
       <div className="flex min-w-0 flex-col overflow-hidden text-on-hero">
