@@ -4,6 +4,7 @@ A personal library app for keeping track of the books you own, the ones you
 want to read, your favorites and your own shelves.
 
 **Live demo:** [library-v2-jc22.vercel.app](https://library-v2-jc22.vercel.app)
+— create an account to try it out. Any email works, no verification needed.
 
 This is a rewrite of my earlier [library-app](https://github.com/jcelic/library-app).
 The first version used a demo user and a separate Express backend; this one is
@@ -22,10 +23,12 @@ a full-stack Next.js app with real accounts and custom authentication.
   bottom navigation on mobile
 - CI with GitHub Actions: lint, type check, formatting and build
 - Rate limiting for login and sign up with Upstash Redis
+- Adding books in a modal form, with duplicate detection and toast
+  notifications
 
 ## Planned
 
-- Books: add, edit, delete, search, filters, favorites and reading status
+- Books: list, edit, delete, search, filters, favorites and reading status
 - Wishlist and custom shelves
 - Email verification and password reset
 - Tests
@@ -50,6 +53,7 @@ a full-stack Next.js app with real accounts and custom authentication.
 src/
 ├── app/
 │   ├── (app)/
+│   │   ├── books/
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── (auth)/
@@ -61,6 +65,7 @@ src/
 │   └── layout.tsx
 ├── components/
 │   ├── auth/
+│   ├── books/
 │   ├── layout/
 │   └── ui/
 ├── lib/
