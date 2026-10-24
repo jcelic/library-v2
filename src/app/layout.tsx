@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/Toaster';
 
 const nunito = Nunito({
   subsets: ['latin', 'latin-ext'],
@@ -20,6 +21,7 @@ const RootLayout = ({ children }: LayoutProps<'/'>) => {
     <html lang="en" className={nunito.variable}>
       <body className="bg-bg font-sans text-sm text-ink antialiased">
         {children}
+        <Toaster />
       </body>
     </html>
   );
