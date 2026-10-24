@@ -1,23 +1,9 @@
-import {
-  Bookmark,
-  Heart,
-  House,
-  Library,
-  LogOut,
-  Settings,
-} from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { LogoMark } from '@/components/ui/LogoMark';
 import { getCurrentUser } from '@/lib/auth/session';
 import { logout } from '@/lib/auth/actions';
-
-const NAV_ITEMS = [
-  { href: '/', label: 'Home', icon: House },
-  { href: '/shelves', label: 'Shelves', icon: Library },
-  { href: '/wishlist', label: 'Wishlist', icon: Bookmark },
-  { href: '/favorites', label: 'Favorites', icon: Heart },
-  { href: '/settings', label: 'Settings', icon: Settings },
-];
+import NavLinks from '@/components/layout/NavLinks';
 
 const getInitials = (name: string): string => {
   const parts = name.trim().split(/\s+/);
@@ -39,21 +25,7 @@ const Sidebar = async () => {
         <span className="text-xl font-extrabold tracking-tight">Library</span>
       </Link>
 
-      <nav aria-label="Main">
-        <ul className="space-y-0.5">
-          {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="flex h-11 items-center gap-3 rounded-xl px-3 font-semibold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink"
-              >
-                <Icon className="size-5" aria-hidden="true" />
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <NavLinks />
 
       {user && (
         <div className="mt-auto flex items-center gap-2.5 rounded-2xl bg-surface-2 p-2.5">
