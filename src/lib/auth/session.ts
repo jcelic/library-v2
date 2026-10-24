@@ -76,3 +76,15 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 
   return session.user;
 });
+
+export const deleteSession = async () => {
+  const cookieStore = await cookies();
+
+  const cookie = cookieStore.get(SESSION_COOKIE_NAME);
+
+  if (cookie?.value) {
+    const tokenHash = hashToken(cookie.value);
+    await db.session.deleteMany({ where: { tokenHash } });
+    cookieStore.delete(SESSION_COOKIE_NAME);
+  }
+};
