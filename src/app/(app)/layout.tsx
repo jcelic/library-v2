@@ -1,4 +1,5 @@
 import MobileHeader from '@/components/layout/MobileHeader';
+import MobileNav from '@/components/layout/MobileNav';
 import Sidebar from '@/components/layout/Sidebar';
 
 const AppLayout = ({ children }: LayoutProps<'/'>) => {
@@ -9,8 +10,12 @@ const AppLayout = ({ children }: LayoutProps<'/'>) => {
       <div className="flex min-w-0 flex-1 flex-col">
         <MobileHeader />
 
-        <main className="flex-1 px-6 py-8 lg:px-10">{children}</main>
+        <main className="flex-1 px-6 pt-8 pb-24 lg:px-10 lg:pb-8">
+          {children}
+        </main>
       </div>
+
+      <MobileNav />
     </div>
   );
 };
