@@ -4,7 +4,7 @@ import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { FieldError } from '@/components/ui/FieldError';
-import { type SignUpInput, signUpSchema } from '@/lib/validations/auth';
+import { type SignUpInput, signUpSchema } from '@/lib/validations/signup';
 import { signUp } from '@/app/(auth)/signup/actions';
 import { Spinner } from '@/components/ui/Spinner';
 import { getPasswordScore } from '@/lib/password-strength';

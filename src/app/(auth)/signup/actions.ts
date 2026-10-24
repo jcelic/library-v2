@@ -6,7 +6,7 @@ import { Prisma } from '@/generated/prisma/client';
 import { hashPassword } from '@/lib/auth/password';
 import { createSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
-import { signUpSchema } from '@/lib/validations/auth';
+import { signUpSchema } from '@/lib/validations/signup';
 
 export type SignUpResult = {
   errors: {
