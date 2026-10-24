@@ -19,10 +19,10 @@ a full-stack Next.js app with real accounts and custom authentication.
 - App layout with a sidebar on desktop, and a header with a user menu and
   bottom navigation on mobile
 - CI with GitHub Actions: lint, type check, formatting and build
+- Rate limiting for login and sign up with Upstash Redis
 
 ## Planned
 
-- Rate limiting for login and sign up
 - Books: add, edit, delete, search, filters, favorites and reading status
 - Wishlist and custom shelves
 - Email verification and password reset
@@ -36,6 +36,7 @@ a full-stack Next.js app with real accounts and custom authentication.
 - Tailwind CSS 4
 - Neon (serverless Postgres)
 - Prisma 7
+- Upstash Redis
 - Zod
 - React Hook Form
 - argon2
@@ -67,7 +68,9 @@ src/
 │   ├── env.ts
 │   ├── format.ts
 │   ├── navigation.ts
-│   └── password-strength.ts
+│   ├── password-strength.ts
+│   ├── rate-limit.ts
+│   └── request.ts
 └── proxy.ts
 prisma/
 ├── migrations/
@@ -83,12 +86,15 @@ npm install
 ```
 
 Create a free [Neon](https://neon.tech) project and copy its connection
-strings.
+strings. Then create a free [Upstash](https://upstash.com) Redis database and
+copy its REST URL and token.
 
 Copy `.env.example` to `.env` and fill in:
 
 - `DATABASE_URL` – the pooled connection string, used by the app
 - `DIRECT_URL` – the direct connection string, used by migrations
+- `UPSTASH_REDIS_REST_URL` – the Redis REST URL, used for rate limiting
+- `UPSTASH_REDIS_REST_TOKEN` – the Redis REST token
 
 Create the database tables:
 
