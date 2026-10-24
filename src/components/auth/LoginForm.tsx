@@ -1,13 +1,37 @@
 'use client';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { login } from '@/app/(auth)/login/actions';
+import { FieldError } from '@/components/ui/FieldError';
+import { Spinner } from '@/components/ui/Spinner';
+import { type LoginInput, loginSchema } from '@/lib/validations/login';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
+
+  const onSubmit = async (values: LoginInput) => {
+    const result = await login(values);
+
+    if (result?.error) {
+      setError('root', { message: result.error });
+    }
+  };
+
   return (
-    <form className="space-y-6">
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-2">
         <label htmlFor="email" className="block font-bold text-ink-2">
           Email
@@ -20,13 +44,17 @@ const LoginForm = () => {
 
           <input
             id="email"
-            name="email"
             type="email"
+            {...register('email')}
             autoComplete="email"
             placeholder="john@example.com"
-            className="h-12 w-full rounded-xl border border-line-2 bg-surface pr-4 pl-12 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            aria-invalid={errors.email ? true : undefined}
+            aria-describedby="email-error"
+            className={`h-12 w-full rounded-xl border bg-surface pr-4 pl-12 text-base text-ink placeholder:text-muted focus:outline-none ${errors.email ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
           />
         </div>
+
+        <FieldError message={errors.email?.message} id="email-error" />
       </div>
 
       <div className="space-y-2">
@@ -50,11 +78,13 @@ const LoginForm = () => {
 
           <input
             id="password"
-            name="password"
             type={showPassword ? 'text' : 'password'}
+            {...register('password')}
             autoComplete="current-password"
             placeholder="Enter your password"
-            className="h-12 w-full rounded-xl border border-line-2 bg-surface px-12 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            aria-invalid={errors.password ? true : undefined}
+            aria-describedby="password-error"
+            className={`h-12 w-full rounded-xl border bg-surface px-12 text-base text-ink placeholder:text-muted focus:outline-none ${errors.password ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
           />
 
           <button
@@ -70,13 +100,26 @@ const LoginForm = () => {
             )}
           </button>
         </div>
+
+        <FieldError message={errors.password?.message} id="password-error" />
       </div>
 
+      {errors.root?.message && (
+        <p
+          role="alert"
+          className="rounded-xl bg-danger-soft px-4 py-3 text-sm font-semibold text-danger"
+        >
+          {errors.root.message}
+        </p>
+      )}
+
       <button
-        type="button"
-        className="h-14 w-full rounded-xl bg-accent px-6 text-base font-extrabold text-on-accent transition-colors hover:bg-accent-hover"
+        type="submit"
+        disabled={isSubmitting}
+        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-base font-extrabold text-on-accent transition-colors enabled:hover:bg-accent-hover disabled:opacity-70"
       >
-        Sign in
+        {isSubmitting ? 'Signing in…' : 'Sign in'}
+        {isSubmitting && <Spinner />}
       </button>
     </form>
   );
