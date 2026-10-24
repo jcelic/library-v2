@@ -35,9 +35,9 @@ const AuthLayout = async ({ children }: LayoutProps<'/'>) => {
           <p className="max-w-xl text-[clamp(2.25rem,3.4vw,3.5rem)] leading-[1.06] font-extrabold tracking-tight">
             Every book you own,
             <br />
-            love and want — on
+            love and want — in
             <br />
-            one shelf.
+            one place.
           </p>
 
           <p className="max-w-lg text-lg leading-relaxed text-on-hero/80">
