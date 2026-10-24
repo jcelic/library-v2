@@ -4,14 +4,7 @@ import { LogoMark } from '@/components/ui/LogoMark';
 import { requireUser } from '@/lib/auth/session';
 import { logout } from '@/lib/auth/actions';
 import NavLinks from '@/components/layout/NavLinks';
-
-const getInitials = (name: string): string => {
-  const parts = name.trim().split(/\s+/);
-  const first = parts[0].charAt(0);
-  const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
-
-  return (first + last).toUpperCase();
-};
+import { getInitials } from '@/lib/format';
 
 const Sidebar = async () => {
   const user = await requireUser();

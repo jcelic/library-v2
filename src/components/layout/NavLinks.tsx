@@ -1,16 +1,8 @@
 'use client';
 
-import { Bookmark, Heart, House, Library, Settings } from 'lucide-react';
+import { isNavItemActive, NAV_ITEMS } from '@/lib/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-const NAV_ITEMS = [
-  { href: '/', label: 'Home', icon: House },
-  { href: '/shelves', label: 'Shelves', icon: Library },
-  { href: '/favorites', label: 'Favorites', icon: Heart },
-  { href: '/wishlist', label: 'Wishlist', icon: Bookmark },
-  { href: '/settings', label: 'Settings', icon: Settings },
-];
 
 const NavLinks = () => {
   const pathname = usePathname();
@@ -19,8 +11,7 @@ const NavLinks = () => {
     <nav aria-label="Main">
       <ul className="space-y-0.5">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const isActive =
-            href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const isActive = isNavItemActive(href, pathname);
 
           return (
             <li key={href}>
