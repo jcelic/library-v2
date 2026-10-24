@@ -3,6 +3,8 @@
 A personal library app for keeping track of the books you own, the ones you
 want to read, your favorites and your own shelves.
 
+**Live demo:** [library-v2-jc22.vercel.app](https://library-v2-jc22.vercel.app)
+
 This is a rewrite of my earlier [library-app](https://github.com/jcelic/library-app).
 The first version used a demo user and a separate Express backend; this one is
 a full-stack Next.js app with real accounts and custom authentication.
