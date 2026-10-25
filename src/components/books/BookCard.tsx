@@ -1,14 +1,18 @@
-import { BookOpen, Check, Clock, Heart, Trash2 } from 'lucide-react';
+import { BookOpen, Check, Clock, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import { BookStatus } from '@/generated/prisma/enums';
 import type { Book } from '@/generated/prisma/client';
-import Image from 'next/image';
+import FavoriteButton from '@/components/books/FavoriteButton';
 
 type BookCardProps = {
-  book: Pick<Book, 'title' | 'author' | 'imageUrl' | 'status' | 'favorite'>;
+  book: Pick<
+    Book,
+    'id' | 'title' | 'author' | 'imageUrl' | 'status' | 'favorite'
+  >;
 };
 
 const BookCard = ({ book }: BookCardProps) => {
-  const { title, author, imageUrl, status, favorite } = book;
+  const { id, title, author, imageUrl, status, favorite } = book;
   const isFinished = status === BookStatus.FINISHED;
 
   return (
@@ -51,22 +55,7 @@ const BookCard = ({ book }: BookCardProps) => {
           {isFinished ? 'Finished' : 'Not finished'}
         </button>
 
-        <button
-          type="button"
-          aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
-          aria-pressed={favorite}
-          className={`flex size-10.5 shrink-0 items-center justify-center rounded-xl transition-colors ${
-            favorite
-              ? 'bg-fav-soft text-fav'
-              : 'bg-surface-2 text-ink-2 hover:text-ink'
-          }`}
-        >
-          <Heart
-            className="size-5"
-            fill={favorite ? 'currentColor' : 'none'}
-            aria-hidden="true"
-          />
-        </button>
+        <FavoriteButton id={id} favorite={favorite} />
 
         <button
           type="button"
