@@ -19,6 +19,19 @@ export const bookSchema = z.object({
     .min(1, 'Author is required')
     .max(100, 'Author must be at most 100 characters long'),
 
+  imageUrl: z
+    .string()
+    .trim()
+    .max(2048, 'Image link must be at most 2048 characters long')
+    .pipe(
+      z.literal('').or(
+        z.url({
+          protocol: /^https$/,
+          error: 'Enter a valid https image link',
+        }),
+      ),
+    ),
+
   category: z.enum(BookCategory, { error: 'Please choose a category' }),
 
   status: z.enum(BookStatus),

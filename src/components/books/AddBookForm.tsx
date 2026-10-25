@@ -26,6 +26,7 @@ const AddBookForm = ({ onSuccess, onCancel }: AddBookFormProps) => {
       title: '',
       subtitle: '',
       author: '',
+      imageUrl: '',
       status: BookStatus.NOT_FINISHED,
     },
   });
@@ -50,6 +51,7 @@ const AddBookForm = ({ onSuccess, onCancel }: AddBookFormProps) => {
 
   return (
     <form
+      noValidate
       onSubmit={(event) => handleSubmit(onSubmit)(event)}
       className="flex min-h-0 flex-1 flex-col"
     >
@@ -141,7 +143,14 @@ const AddBookForm = ({ onSuccess, onCancel }: AddBookFormProps) => {
           <input
             id="book-image-url"
             type="url"
-            className="h-11 w-full rounded-xl border border-line-2 bg-surface px-4 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            {...register('imageUrl')}
+            aria-invalid={errors.imageUrl ? true : undefined}
+            aria-describedby="book-image-url-error"
+            className={`h-11 w-full rounded-xl border bg-surface px-4 text-base text-ink placeholder:text-muted focus:outline-none ${errors.imageUrl ? 'border-danger' : 'border-line-2 focus:border-accent'}`}
+          />
+          <FieldError
+            message={errors.imageUrl?.message}
+            id="book-image-url-error"
           />
         </div>
 

@@ -15,6 +15,7 @@ export type CreateBookResult =
         title?: string[];
         subtitle?: string[];
         author?: string[];
+        imageUrl?: string[];
         category?: string[];
         status?: string[];
         root?: string[];
@@ -40,6 +41,7 @@ export const createBook = async (
       data: {
         ...result.data,
         subtitle: result.data.subtitle || null,
+        imageUrl: result.data.imageUrl || null,
         userId: user.id,
       },
     });
