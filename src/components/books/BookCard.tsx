@@ -1,8 +1,8 @@
-import { BookOpen, Check, Clock, Trash2 } from 'lucide-react';
+import { BookOpen, Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import { BookStatus } from '@/generated/prisma/enums';
 import type { Book } from '@/generated/prisma/client';
 import FavoriteButton from '@/components/books/FavoriteButton';
+import StatusButton from '@/components/books/StatusButton';
 
 type BookCardProps = {
   book: Pick<
@@ -13,7 +13,6 @@ type BookCardProps = {
 
 const BookCard = ({ book }: BookCardProps) => {
   const { id, title, author, imageUrl, status, favorite } = book;
-  const isFinished = status === BookStatus.FINISHED;
 
   return (
     <article className="flex h-full w-full flex-col items-center rounded-[20px] border border-line bg-surface px-5 pb-5">
@@ -41,19 +40,7 @@ const BookCard = ({ book }: BookCardProps) => {
       </p>
 
       <div className="mt-auto flex w-full gap-2 pt-4">
-        <button
-          type="button"
-          className={`flex h-10.5 flex-1 items-center justify-center gap-1.5 rounded-xl text-sm font-bold whitespace-nowrap transition hover:brightness-95 ${
-            isFinished ? 'bg-ok-soft text-ok' : 'bg-warn-soft text-warn'
-          }`}
-        >
-          {isFinished ? (
-            <Check className="size-4" aria-hidden="true" />
-          ) : (
-            <Clock className="size-4" aria-hidden="true" />
-          )}
-          {isFinished ? 'Finished' : 'Not finished'}
-        </button>
+        <StatusButton id={id} status={status} />
 
         <FavoriteButton id={id} favorite={favorite} />
 

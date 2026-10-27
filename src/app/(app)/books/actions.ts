@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { Prisma } from '@/generated/prisma/client';
+import { BookStatus } from '@/generated/prisma/enums';
 import { requireUser } from '@/lib/auth/session';
 import { db } from '@/lib/db';
 import { bookSchema } from '@/lib/validations/book';
@@ -22,12 +23,17 @@ export type CreateBookResult =
       };
     };
 
-export type SetFavoriteResult =
+export type ActionResult =
   { success: true } | { success: false; error: string };
 
 const setFavoriteSchema = z.object({
   id: z.uuid(),
   favorite: z.boolean(),
+});
+
+const setStatusSchema = z.object({
+  id: z.uuid(),
+  status: z.enum(BookStatus),
 });
 
 export const createBook = async (
@@ -75,7 +81,7 @@ export const createBook = async (
 export const setFavorite = async (
   id: string,
   favorite: boolean,
-): Promise<SetFavoriteResult> => {
+): Promise<ActionResult> => {
   const user = await requireUser();
 
   const result = setFavoriteSchema.safeParse({ id, favorite });
@@ -87,6 +93,32 @@ export const setFavorite = async (
   const { count } = await db.book.updateMany({
     where: { id: result.data.id, userId: user.id },
     data: { favorite: result.data.favorite },
+  });
+
+  if (count === 0) {
+    return { success: false, error: 'Book not found' };
+  }
+
+  revalidatePath('/');
+
+  return { success: true };
+};
+
+export const setStatus = async (
+  id: string,
+  status: BookStatus,
+): Promise<ActionResult> => {
+  const user = await requireUser();
+
+  const result = setStatusSchema.safeParse({ id, status });
+
+  if (!result.success) {
+    return { success: false, error: 'Invalid request' };
+  }
+
+  const { count } = await db.book.updateMany({
+    where: { id: result.data.id, userId: user.id },
+    data: { status: result.data.status },
   });
 
   if (count === 0) {
