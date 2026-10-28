@@ -14,7 +14,6 @@ const HomePage = async () => {
     select: {
       id: true,
       title: true,
-      subtitle: true,
       author: true,
       favorite: true,
       imageUrl: true,

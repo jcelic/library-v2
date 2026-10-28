@@ -77,7 +77,7 @@ export const createBook = async (
     throw error;
   }
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
 
   return { success: true };
 };
@@ -103,7 +103,7 @@ export const setFavorite = async (
     return { success: false, error: 'Book not found' };
   }
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
 
   return { success: true };
 };
@@ -129,7 +129,7 @@ export const setStatus = async (
     return { success: false, error: 'Book not found' };
   }
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
 
   return { success: true };
 };
@@ -151,7 +151,7 @@ export const deleteBook = async (id: string): Promise<ActionResult> => {
     return { success: false, error: 'Book not found' };
   }
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
 
   return { success: true };
 };
