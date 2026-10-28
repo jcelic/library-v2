@@ -1,8 +1,9 @@
-import { BookOpen, Trash2 } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import Image from 'next/image';
 import type { Book } from '@/generated/prisma/client';
 import FavoriteButton from '@/components/books/FavoriteButton';
 import StatusButton from '@/components/books/StatusButton';
+import DeleteBookButton from '@/components/books/DeleteBookButton';
 
 type BookCardProps = {
   book: Pick<
@@ -44,13 +45,7 @@ const BookCard = ({ book }: BookCardProps) => {
 
         <FavoriteButton id={id} favorite={favorite} />
 
-        <button
-          type="button"
-          aria-label="Delete book"
-          className="flex size-10.5 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-ink-2 transition-colors hover:bg-danger-soft hover:text-danger"
-        >
-          <Trash2 className="size-5" aria-hidden="true" />
-        </button>
+        <DeleteBookButton id={id} title={title} imageUrl={imageUrl} />
       </div>
     </article>
   );

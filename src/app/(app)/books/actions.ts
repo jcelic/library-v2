@@ -36,6 +36,10 @@ const setStatusSchema = z.object({
   status: z.enum(BookStatus),
 });
 
+const deleteBookSchema = z.object({
+  id: z.uuid(),
+});
+
 export const createBook = async (
   values: unknown,
 ): Promise<CreateBookResult> => {
@@ -119,6 +123,28 @@ export const setStatus = async (
   const { count } = await db.book.updateMany({
     where: { id: result.data.id, userId: user.id },
     data: { status: result.data.status },
+  });
+
+  if (count === 0) {
+    return { success: false, error: 'Book not found' };
+  }
+
+  revalidatePath('/');
+
+  return { success: true };
+};
+
+export const deleteBook = async (id: string): Promise<ActionResult> => {
+  const user = await requireUser();
+
+  const result = deleteBookSchema.safeParse({ id });
+
+  if (!result.success) {
+    return { success: false, error: 'Invalid request' };
+  }
+
+  const { count } = await db.book.deleteMany({
+    where: { id: result.data.id, userId: user.id },
   });
 
   if (count === 0) {
