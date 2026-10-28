@@ -5,11 +5,13 @@ import FavoriteButton from '@/components/books/FavoriteButton';
 import StatusButton from '@/components/books/StatusButton';
 import DeleteBookButton from '@/components/books/DeleteBookButton';
 
+export type BookCardData = Pick<
+  Book,
+  'id' | 'title' | 'author' | 'imageUrl' | 'status' | 'favorite'
+>;
+
 type BookCardProps = {
-  book: Pick<
-    Book,
-    'id' | 'title' | 'author' | 'imageUrl' | 'status' | 'favorite'
-  >;
+  book: BookCardData;
 };
 
 const BookCard = ({ book }: BookCardProps) => {

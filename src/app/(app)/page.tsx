@@ -1,5 +1,5 @@
 import AddBookDialog from '@/components/books/AddBookDialog';
-import BookCard from '@/components/books/BookCard';
+import BookGrid from '@/components/books/BookGrid';
 import EmptyLibrary from '@/components/books/EmptyLibrary';
 import { requireUser } from '@/lib/auth/session';
 import { db } from '@/lib/db';
@@ -38,17 +38,7 @@ const HomePage = async () => {
         {hasBooks && <AddBookDialog />}
       </div>
 
-      {hasBooks ? (
-        <ul className="mt-16 grid grid-cols-[repeat(auto-fill,min(100%,16.5rem))] justify-evenly gap-x-6 gap-y-28">
-          {books.map((book) => (
-            <li key={book.id}>
-              <BookCard book={book} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <EmptyLibrary />
-      )}
+      {hasBooks ? <BookGrid books={books} /> : <EmptyLibrary />}
     </div>
   );
 };
